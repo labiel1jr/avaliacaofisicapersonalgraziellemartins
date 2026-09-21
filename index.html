@@ -401,6 +401,14 @@ function num(v){
   const n = parseFloat(s);
   return Number.isFinite(n) ? n : null;
 }
+/* Corrige o engano comum de digitar a altura em metros (ex.: "1.65") em um campo que
+   espera centímetros. Qualquer valor plausível de metros (0 < v <= 3) é convertido para cm. */
+function normalizeAltura(v){
+  const n = num(v);
+  if(n===null || n<=0) return v;
+  if(n<=3) return String(Math.round(n*1000)/10); // 1.65 -> 165 (mantém 1 casa decimal)
+  return v;
+}
 function fmt(n,d=1){
   if(n===null||n===undefined||!Number.isFinite(n)) return '—';
   return n.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -917,7 +925,7 @@ function mergeData(obj){
         if(Array.isArray(obj.aluno.objetivos)) fresh.aluno.objetivos = obj.aluno.objetivos.map(String);
         else if(typeof obj.aluno.objetivo === 'string' && obj.aluno.objetivo.trim()) fresh.aluno.objetivos = [obj.aluno.objetivo.trim()];
       } else if(obj.aluno[k]!=null){
-        fresh.aluno[k]=String(obj.aluno[k]);
+        fresh.aluno[k] = (k==='altura') ? normalizeAltura(obj.aluno[k]) : String(obj.aluno[k]);
       }
     });
   }
@@ -1401,7 +1409,12 @@ document.addEventListener('change', e=>{
     return;
   }
   if(!e.target.dataset || !e.target.dataset.path) return;
-  setByPath(e.target.dataset.path, e.target.value);
+  let val = e.target.value;
+  if(e.target.dataset.path === 'aluno.altura'){
+    const fixed = normalizeAltura(val);
+    if(fixed !== val){ val = fixed; e.target.value = fixed; toast('Altura ajustada para '+fixed+' cm (parecia estar em metros).'); }
+  }
+  setByPath(e.target.dataset.path, val);
   refresh();
 });
 $$('.filelabel').forEach(l=>l.addEventListener('keydown',e=>{
