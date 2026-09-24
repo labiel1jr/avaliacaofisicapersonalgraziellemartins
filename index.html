@@ -268,9 +268,11 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
     <button class="tab" role="tab" id="t-av2" aria-controls="p-av2" aria-selected="false"><span class="n">3</span> 2ª Avaliação</button>
     <button class="tab" role="tab" id="t-av3" aria-controls="p-av3" aria-selected="false"><span class="n">4</span> 3ª Avaliação</button>
     <button class="tab" role="tab" id="t-av4" aria-controls="p-av4" aria-selected="false"><span class="n">5</span> 4ª Avaliação</button>
-    <button class="tab" role="tab" id="t-rep" aria-controls="p-rep" aria-selected="false"><span class="n">6</span> Relatório</button>
-    <button class="tab" role="tab" id="t-3d" aria-controls="p-3d" aria-selected="false"><span class="n">7</span> Corpo em 3D</button>
-    <button class="tab" role="tab" id="t-dados" aria-controls="p-dados" aria-selected="false"><span class="n">8</span> Dados (JSON)</button>
+    <button class="tab" role="tab" id="t-av5" aria-controls="p-av5" aria-selected="false"><span class="n">6</span> 5ª Avaliação</button>
+    <button class="tab" role="tab" id="t-av6" aria-controls="p-av6" aria-selected="false"><span class="n">7</span> 6ª Avaliação</button>
+    <button class="tab" role="tab" id="t-rep" aria-controls="p-rep" aria-selected="false"><span class="n">8</span> Relatório</button>
+    <button class="tab" role="tab" id="t-3d" aria-controls="p-3d" aria-selected="false"><span class="n">9</span> Corpo em 3D</button>
+    <button class="tab" role="tab" id="t-dados" aria-controls="p-dados" aria-selected="false"><span class="n">10</span> Dados (JSON)</button>
   </nav>
 
   <!-- ===== ALUNO ===== -->
@@ -340,8 +342,34 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
       <p class="hint">Meça nos mesmos pontos anatômicos e nas mesmas condições da avaliação anterior.</p>
       <div id="form-av4"></div>
       <div class="actions">
+        <button class="solid" data-go="t-av5">Ir para a 5ª avaliação</button>
+        <button class="ghost" id="btnPullAv4">Puxar dados da 5ª avaliação</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AV5 ===== -->
+  <section class="panel" id="p-av5" role="tabpanel" aria-labelledby="t-av5">
+    <div class="card">
+      <h2>5ª Avaliação</h2>
+      <p class="hint">Meça nos mesmos pontos anatômicos e nas mesmas condições da avaliação anterior.</p>
+      <div id="form-av5"></div>
+      <div class="actions">
+        <button class="solid" data-go="t-av6">Ir para a 6ª avaliação</button>
+        <button class="ghost" id="btnPullAv5">Puxar dados da 6ª avaliação</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AV6 ===== -->
+  <section class="panel" id="p-av6" role="tabpanel" aria-labelledby="t-av6">
+    <div class="card">
+      <h2>6ª Avaliação</h2>
+      <p class="hint">Meça nos mesmos pontos anatômicos e nas mesmas condições da avaliação anterior.</p>
+      <div id="form-av6"></div>
+      <div class="actions">
         <button class="solid" data-go="t-rep">Ver relatório</button>
-        <button class="ghost" id="btnPullAv4">Puxar dados da 1ª avaliação</button>
+        <button class="ghost" id="btnPullAv6">Puxar dados da 1ª avaliação</button>
       </div>
     </div>
   </section>
@@ -360,6 +388,8 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
           <button id="b3-2" aria-pressed="false">2ª avaliação</button>
           <button id="b3-3" aria-pressed="false">3ª avaliação</button>
           <button id="b3-4" aria-pressed="false">4ª avaliação</button>
+          <button id="b3-5" aria-pressed="false">5ª avaliação</button>
+          <button id="b3-6" aria-pressed="false">6ª avaliação</button>
           <button id="b3-c" aria-pressed="true">Comparar</button>
         </div>
         <div>
@@ -369,9 +399,11 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
       </div>
       <div class="legend">
         <div><i style="background:#9B93A3"></i>1ª avaliação</div>
-        <div><i style="background:#9B7FB1"></i>2ª avaliação</div>
-        <div><i style="background:#9A6ABE"></i>3ª avaliação</div>
-        <div><i style="background:#9A55CC"></i>4ª avaliação</div>
+        <div><i style="background:#9B87AB"></i>2ª avaliação</div>
+        <div><i style="background:#9B7AB3"></i>3ª avaliação</div>
+        <div><i style="background:#9A6EBC"></i>4ª avaliação</div>
+        <div><i style="background:#9A61C4"></i>5ª avaliação</div>
+        <div><i style="background:#9A55CC"></i>6ª avaliação</div>
       </div>
     </div>
     <div class="note" id="note3d">O modelo é uma representação proporcional: cada segmento usa o raio derivado da circunferência informada (r = C ÷ 2π) e a altura do aluno. Arraste para girar, use a rolagem para aproximar. No modo "Comparar", só aparecem as avaliações com alguma medida preenchida.</div>
@@ -419,9 +451,9 @@ const MEASURES = [
   {k:'panturrilhaE', label:'Panturrilha esquerda',unit:'cm', dir:'up',   group:'Membros inferiores'}
 ];
 const MUSCLE_KEYS = ['ombros','torax','bracoD','bracoE','antebraco','coxaD','coxaE','panturrilhaD','panturrilhaE'];
-const AVAL_KEYS = ['av1','av2','av3','av4'];
-const AVAL_LABELS = { av1:'1ª avaliação', av2:'2ª avaliação', av3:'3ª avaliação', av4:'4ª avaliação' };
-const AVAL_COLORS = { av1:'#9B93A3', av2:'#9B7FB1', av3:'#9A6ABE', av4:'#9A55CC' };
+const AVAL_KEYS = ['av1','av2','av3','av4','av5','av6'];
+const AVAL_LABELS = { av1:'1ª avaliação', av2:'2ª avaliação', av3:'3ª avaliação', av4:'4ª avaliação', av5:'5ª avaliação', av6:'6ª avaliação' };
+const AVAL_COLORS = { av1:'#9B93A3', av2:'#9B87AB', av3:'#9B7AB3', av4:'#9A6EBC', av5:'#9A61C4', av6:'#9A55CC' };
 const OBJETIVOS = [
   'Emagrecer','Perder gordura abdominal','Reduzir o percentual de gordura','Definir o corpo',
   'Ganhar massa muscular','Diminuir medidas','Tonificar os músculos','Melhorar o condicionamento físico',
@@ -431,8 +463,8 @@ const OBJETIVOS = [
 const STORE_KEY = 'avaliacao-fisica:v1';
 
 function blankAval(){ const o={data:''}; MEASURES.forEach(m=>o[m.k]=''); return o; }
-let data = { versao:2, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''},
-  av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval() };
+let data = { versao:3, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''},
+  av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval(), av5:blankAval(), av6:blankAval() };
 function avalHasData(av){
   return !!(av && (av.data || MEASURES.some(m=>num(av[m.k])!==null)));
 }
@@ -941,7 +973,7 @@ function renderReport(target){
   h += '</div>';
 
   if(filled.length < 2){
-    h += '<div class="sec"><h3>Comparativo</h3><div class="prose"><p>Preencha pelo menos duas avaliações (1ª, 2ª, 3ª ou 4ª) para o site montar o comparativo completo, a interpretação técnica, os pontos de atenção e as recomendações.</p></div></div>';
+    h += '<div class="sec"><h3>Comparativo</h3><div class="prose"><p>Preencha pelo menos duas avaliações (entre a 1ª e a 6ª) para o site montar o comparativo completo, a interpretação técnica, os pontos de atenção e as recomendações.</p></div></div>';
     h += '<div class="foot"><b>Importante:</b> esta análise é baseada nas medidas fornecidas e tem caráter informativo. A interpretação clínica e o planejamento de treinamento ou nutrição devem ser realizados por um profissional habilitado, considerando o histórico completo do aluno.</div>';
     h += '</div>';
     host.innerHTML = h;
@@ -1074,8 +1106,8 @@ function load(){
 }
 function mergeData(obj){
   if(!obj || typeof obj!=='object') return false;
-  const fresh = { versao:2, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''},
-    av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval() };
+  const fresh = { versao:3, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''},
+    av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval(), av5:blankAval(), av6:blankAval() };
   if(obj.aluno){
     Object.keys(fresh.aluno).forEach(k=>{
       if(k==='objetivos'){
@@ -1332,7 +1364,7 @@ const three = {
       const up = ()=>{ drag=false; };
       el.addEventListener('mousedown',down); window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
       el.addEventListener('touchstart',down,{passive:true}); el.addEventListener('touchmove',move,{passive:false}); el.addEventListener('touchend',up);
-      el.addEventListener('wheel', e=>{ this.dist = clamp(this.dist + e.deltaY*0.35, 140, 620); e.preventDefault(); }, {passive:false});
+      el.addEventListener('wheel', e=>{ this.dist = clamp(this.dist + e.deltaY*0.35, 140, 820); e.preventDefault(); }, {passive:false});
 
       if(window.ResizeObserver) new ResizeObserver(()=>this.resize()).observe(host);
       window.addEventListener('resize',()=>this.resize());
@@ -1478,8 +1510,7 @@ const three = {
     while(this.root.children.length) this.root.remove(this.root.children[0]);
 
     const H = num(data.aluno.altura) || 170;
-    this.targetY = H*0.48; this.dist = clamp(this.dist, 140, 620);
-    const spacing = H*0.32;
+    this.targetY = H*0.48; this.dist = clamp(this.dist, 140, 820);
 
     const estKeys = ['pescoco','ombros','torax','cintura','abdomen','quadril','braco','antebraco','coxa','pant'];
     const hasEstimated = p => estKeys.some(k=>p[k] && p[k].est);
@@ -1493,6 +1524,9 @@ const three = {
         notes.push('Informe as medidas para gerar o modelo.');
       } else {
         const n = filled.length;
+        /* espaçamento menor conforme mais figuras entram em cena, pra manter o grupo coeso */
+        const spacing = H * (n<=2 ? 0.34 : n<=4 ? 0.30 : n===5 ? 0.25 : 0.21);
+        const totalWidth = spacing*(n-1);
         filled.forEach((k,i)=>{
           const p = this.profile(data[k]);
           const f = this.figure(p, AVAL_COLORS[k], 1);
@@ -1500,6 +1534,11 @@ const three = {
           this.root.add(f);
           if(hasEstimated(p)) anyEstimated = true;
         });
+        /* afasta a câmera automaticamente só o suficiente pra caber todas as figuras,
+           sem forçar zoom pra dentro caso o usuário já tenha afastado mais que isso */
+        const minDistForFit = totalWidth*1.05 + H*0.95;
+        if(this.dist < minDistForFit) this.dist = Math.min(minDistForFit, 820);
+        this._floorRadius = Math.max(H*0.42, totalWidth/2 + H*0.30);
       }
     } else {
       const k = 'av'+this.mode;
@@ -1511,10 +1550,11 @@ const three = {
       } else {
         notes.push('Sem medidas na '+AVAL_LABELS[k]+'.');
       }
+      this._floorRadius = H*0.42;
     }
 
     /* piso */
-    const floor = new THREE.Mesh(new THREE.CircleGeometry(H*0.42 + spacing*0.6, 48),
+    const floor = new THREE.Mesh(new THREE.CircleGeometry(this._floorRadius || H*0.42, 48),
       new THREE.MeshBasicMaterial({color:0x8fa6b0, transparent:true, opacity:0.16}));
     floor.rotation.x = -Math.PI/2; floor.position.y = 0.4;
     this.root.add(floor);
@@ -1526,14 +1566,14 @@ const three = {
     $('#note3d').textContent = txt;
   }
 };
-['1','2','3','4'].forEach(n=>{
+['1','2','3','4','5','6'].forEach(n=>{
   const btn = $('#b3-'+n);
   if(btn) btn.addEventListener('click',()=>set3d(n));
 });
 $('#b3-c').addEventListener('click',()=>set3d('compare'));
 function set3d(m){
   three.mode = m;
-  ['1','2','3','4'].forEach(n=>{ const b=$('#b3-'+n); if(b) b.setAttribute('aria-pressed', String(m===n)); });
+  ['1','2','3','4','5','6'].forEach(n=>{ const b=$('#b3-'+n); if(b) b.setAttribute('aria-pressed', String(m===n)); });
   $('#b3-c').setAttribute('aria-pressed', String(m==='compare'));
   three.init(); three.update();
 }
@@ -1557,9 +1597,11 @@ $('#btnPullAv1').addEventListener('click',()=>pullFromNext('av1'));
 $('#btnPullAv2').addEventListener('click',()=>pullFromNext('av2'));
 $('#btnPullAv3').addEventListener('click',()=>pullFromNext('av3'));
 $('#btnPullAv4').addEventListener('click',()=>pullFromNext('av4'));
+$('#btnPullAv5').addEventListener('click',()=>pullFromNext('av5'));
+$('#btnPullAv6').addEventListener('click',()=>pullFromNext('av6'));
 $('#btnClear').addEventListener('click',()=>{
-  data = { versao:2, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''},
-    av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval() };
+  data = { versao:3, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''},
+    av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval(), av5:blankAval(), av6:blankAval() };
   dataToForm(); refresh(); toast('Todos os campos foram limpos.');
 });
 $('#btnDemo').addEventListener('click',()=>{
@@ -1573,7 +1615,11 @@ $('#btnDemo').addEventListener('click',()=>{
     av3:{data:'2026-08-11', peso:'78.6', pescoco:'38.5', ombros:'118', torax:'105', busto:'', bracoD:'34.5', bracoE:'34',
          antebraco:'28.5', abdomen:'87', cintura:'83', quadril:'98', coxaD:'60', coxaE:'59.5', panturrilhaD:'39', panturrilhaE:'39'},
     av4:{data:'2026-10-13', peso:'76.2', pescoco:'38', ombros:'119', torax:'106', busto:'', bracoD:'35', bracoE:'34.5',
-         antebraco:'29', abdomen:'84', cintura:'80', quadril:'97', coxaD:'60.5', coxaE:'60', panturrilhaD:'39.5', panturrilhaE:'39.5'}
+         antebraco:'29', abdomen:'84', cintura:'80', quadril:'97', coxaD:'60.5', coxaE:'60', panturrilhaD:'39.5', panturrilhaE:'39.5'},
+    av5:{data:'2026-12-15', peso:'74.8', pescoco:'37.5', ombros:'120', torax:'107', busto:'', bracoD:'35.5', bracoE:'35',
+         antebraco:'29', abdomen:'82', cintura:'78', quadril:'96', coxaD:'61', coxaE:'60.5', panturrilhaD:'40', panturrilhaE:'40'},
+    av6:{data:'2027-02-16', peso:'73.5', pescoco:'37', ombros:'120', torax:'107', busto:'', bracoD:'36', bracoE:'35.5',
+         antebraco:'29.5', abdomen:'80', cintura:'76', quadril:'95', coxaD:'61.5', coxaE:'61', panturrilhaD:'40', panturrilhaE:'40'}
   });
   dataToForm(); refresh(); toast('Exemplo carregado.'); selectTab('t-rep');
 });
@@ -1585,6 +1631,8 @@ buildAvalForm('av1');
 buildAvalForm('av2');
 buildAvalForm('av3');
 buildAvalForm('av4');
+buildAvalForm('av5');
+buildAvalForm('av6');
 buildObjetivosBox();
 load();
 dataToForm();

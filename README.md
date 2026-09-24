@@ -2,25 +2,27 @@
 
 Site para avaliação física comparativa de alunas, desenvolvido para o **Studio Grazielle Martins — Treino Personalizado para Mulheres**.
 
-Preencha os dados da aluna e as duas avaliações (inicial e reavaliação), acompanhe o relatório técnico completo na tela, visualize a evolução em um modelo 3D e exporte tudo em PDF, JPG ou TXT — sem precisar de servidor, banco de dados ou instalação.
+Preencha os dados da aluna e até **6 avaliações** ao longo do tempo, acompanhe o relatório técnico completo na tela, visualize a evolução em um modelo 3D e exporte tudo em PDF, JPG ou TXT — sem precisar de servidor, banco de dados ou instalação.
 
 ## ✨ Funcionalidades
 
 - **Tela de boas-vindas** com a logo do studio e botão para iniciar a avaliação.
-- **Formulário em abas**: Aluno → 1ª Avaliação → Reavaliação → Relatório → Corpo em 3D → Dados (JSON).
+- **Formulário em abas**: Aluno → 1ª → 2ª → 3ª → 4ª → 5ª → 6ª Avaliação → Relatório → Corpo em 3D → Dados (JSON).
+- **Botão "Puxar dados"** em cada avaliação, que copia as medidas de uma aba vizinha em ciclo (1ª ← 2ª ← 3ª ← 4ª ← 5ª ← 6ª ← 1ª), agilizando o preenchimento quando os valores mudam pouco entre avaliações.
 - **Objetivos em checkbox**, com 15 opções pré-definidas (emagrecer, ganhar massa, tonificar, melhorar condicionamento, etc.), múltipla escolha.
-- **Relatório técnico automático**, gerado em tempo real conforme os campos são preenchidos:
+- **Relatório técnico automático**, gerado em tempo real conforme os campos são preenchidos, comparando sempre a primeira e a última avaliação preenchida (mesmo que alguma fique em branco no meio):
   - Situação atual (IMC, RCQ, % de gordura, massa gorda e massa magra);
-  - Tabela comparativa com todas as medidas e indicadores (▲ aumento / ▼ redução);
+  - Tabela comparativa com uma coluna por avaliação preenchida (2 a 6) e a variação total;
+  - **Gráficos de histórico** de peso e de percentual de gordura, com um ponto por avaliação;
   - Interpretação técnica em linguagem profissional;
   - Pontos positivos e pontos de atenção;
   - Estimativa de evolução (ritmo mensal e prazo estimado para metas);
   - Nota geral de evolução (0–10) com barras de progresso;
   - Recomendações individualizadas;
   - Observações importantes e aviso de caráter informativo.
-- **Modelo 3D interativo** (three.js), com um boneco proporcional para cada avaliação — arraste para girar, role para aproximar, compare lado a lado. Figuras femininas exibem cabelo estilizado.
-- **Exportação em PDF** (A4, multi-página automática) e **JPG** de alta resolução, prontos para enviar à aluna.
-- **Salvar e carregar dados em .txt** — permite guardar o histórico da aluna e reabrir depois para nova reavaliação.
+- **Modelo 3D interativo** (three.js), com um boneco proporcional por avaliação — veja isoladamente ou compare até 6 figuras lado a lado, em gradiente de cor prata → roxo. Arraste para girar, role para aproximar. Figuras femininas exibem cabelo estilizado.
+- **Exportação em PDF** (A4, multi-página automática) e **JPG** de alta resolução, incluindo os gráficos, prontos para enviar à aluna.
+- **Salvar e carregar dados em .txt** — permite guardar o histórico da aluna e reabrir depois para lançar a próxima avaliação.
 - **Identidade visual do studio**: paleta preto/prata/roxo, tipografia elegante, logo embutida.
 - Responsivo (funciona em celular, tablet e desktop).
 
@@ -60,7 +62,7 @@ avaliacaofisicapersonalgraziellemartins/
 Basta abrir o `index.html` em qualquer navegador — não precisa de servidor.
 
 ### Publicado no GitHub Pages
-Acesse: `https://SEU-USUARIO.github.io/avaliacaofisicapersonalgraziellemartins/`
+Acesse: `https://labiel1jr.github.io/avaliacaofisicapersonalgraziellemartins/`
 
 ### Publicar/atualizar (GitHub Pages)
 1. Faça upload do `index.html` para a raiz do repositório (substituindo o existente, se houver).
