@@ -94,7 +94,7 @@ button.ghost{background:transparent}
 .filelabel input{display:none}
 
 /* ---------- abas ---------- */
-.tabs{display:flex; gap:2px; margin:18px 0 0; overflow-x:auto; border-bottom:1px solid var(--line); scrollbar-width:thin}
+.tabs{display:flex; gap:2px; margin:18px 0 0; overflow-x:auto; overflow-y:hidden; border-bottom:1px solid var(--line); scrollbar-width:thin}
 .tab{
   border:none; border-radius:0; background:transparent; padding:11px 15px; white-space:nowrap;
   color:var(--ink-2); font-weight:500; border-bottom:2px solid transparent; margin-bottom:-1px;
@@ -127,6 +127,7 @@ input,select,textarea{
 }
 select{border:1px solid var(--line); border-radius:8px; padding:9px 10px}
 input:focus,select:focus,textarea:focus{outline:none}
+input[readonly]{color:var(--ink-2); cursor:default}
 .field .row:focus-within{outline:2px solid var(--accent); outline-offset:1px}
 .unit{flex:0 0 auto; padding:0 11px; color:var(--ink-2); font-size:12.5px; border-left:1px solid var(--line); align-self:stretch; display:flex; align-items:center; background:var(--shade)}
 .sub{font-family:'Archivo',sans-serif; font-size:12.5px; font-weight:600; color:var(--ink-2); letter-spacing:.02em; margin:22px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--line)}
@@ -311,7 +312,8 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
       <div class="grid">
         <div class="field"><label for="f_nome">Nome do aluno</label><div class="row"><input id="f_nome" data-path="aluno.nome" placeholder="Nome completo"></div></div>
         <div class="field"><label for="f_sexo">Sexo</label><select id="f_sexo" data-path="aluno.sexo"><option value="">Não informado</option><option value="M">Masculino</option><option value="F">Feminino</option></select></div>
-        <div class="field"><label for="f_idade">Idade</label><div class="row"><input id="f_idade" data-path="aluno.idade" type="number" min="0" max="120" step="1" placeholder="0"><span class="unit">anos</span></div></div>
+        <div class="field"><label for="f_nasc">Data de nascimento</label><div class="row"><input id="f_nasc" data-path="aluno.nascimento" type="date"></div></div>
+        <div class="field"><label for="f_idade">Idade <span style="font-weight:400" id="idadeHint"></span></label><div class="row"><input id="f_idade" data-path="aluno.idade" type="number" min="0" max="120" step="1" placeholder="0"><span class="unit">anos</span></div></div>
         <div class="field"><label for="f_altura">Altura</label><div class="row"><input id="f_altura" data-path="aluno.altura" type="number" min="80" max="240" step="0.5" placeholder="0"><span class="unit">cm</span></div></div>
         <div class="field full">
           <label>Objetivo(s) <span style="font-weight:400">— marque todos que se aplicam</span></label>
@@ -572,7 +574,7 @@ function blankAnamnese(){
   return o;
 }
 function blankData(){
-  return { versao:4, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''}, anamnese:blankAnamnese(),
+  return { versao:4, aluno:{nome:'',sexo:'',nascimento:'',idade:'',altura:'',objetivos:[],profissional:''}, anamnese:blankAnamnese(),
     av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval(), av5:blankAval(), av6:blankAval() };
 }
 function anamHasData(an){
@@ -1430,7 +1432,26 @@ function dataToForm(){
   $$('[data-list]').forEach(cb=>{ cb.checked = (getByPath(cb.dataset.list)||[]).includes(cb.value); });
   markParq();
 }
+/* Idade em anos completos na data de referência (hoje, por padrão) */
+function calcIdade(nascIso, refIso){
+  if(!nascIso) return null;
+  const n = new Date(nascIso+'T00:00:00');
+  const r = refIso ? new Date(refIso+'T00:00:00') : new Date();
+  if(isNaN(n) || isNaN(r) || n>r) return null;
+  let a = r.getFullYear()-n.getFullYear();
+  if(r.getMonth()<n.getMonth() || (r.getMonth()===n.getMonth() && r.getDate()<n.getDate())) a--;
+  return a>=0 && a<=120 ? a : null;
+}
+/* Com data de nascimento, a idade é calculada e o campo fica somente leitura */
+function syncIdade(){
+  const a = calcIdade(data.aluno.nascimento);
+  const el = $('#f_idade'), hint = $('#idadeHint');
+  if(a!==null) data.aluno.idade = String(a);
+  if(el){ el.readOnly = a!==null; if(a!==null) el.value = data.aluno.idade; }
+  if(hint) hint.textContent = a!==null ? '— calculada pela data de nascimento' : '';
+}
 function refresh(){
+  syncIdade();
   renderReport();
   $('#jsonBox').value = JSON.stringify(data,null,2);
   save();
@@ -1952,7 +1973,7 @@ $('#btnClear').addEventListener('click',()=>{
 });
 $('#btnDemo').addEventListener('click',()=>{
   mergeData({
-    aluno:{nome:'Aluno de exemplo', sexo:'M', idade:'34', altura:'176',
+    aluno:{nome:'Aluno de exemplo', sexo:'M', nascimento:'1992-04-18', idade:'34', altura:'176',
       objetivos:['Perder gordura abdominal','Reduzir o percentual de gordura','Ganhar massa muscular'], profissional:''},
     anamnese:{parq1:'N', parq2:'N', parq3:'N', parq4:'N', parq5:'S', parq6:'N', parq7:'N',
       condicoes:['Problemas de coluna'], medicamentos:'', cirurgias:'', lesoes:'Dor lombar leve ao agachar com carga',
