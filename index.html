@@ -4,14 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Avaliação Física — Relatório Comparativo de Medidas</title>
-<meta name="description" content="Preencha avaliações físicas de alunos, compare medidas, IMC, RCQ e percentual de gordura, veja o relatório completo na tela e exporte em PDF, JPG ou TXT.">
+<meta name="description" content="Avaliação física com anamnese, PAR-Q, dobras cutâneas (Faulkner), composição corporal, IMC e RCQ. Compare até 6 avaliações e exporte em PDF ou JPG.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Avaliação Física — Relatório Comparativo de Medidas">
-<meta property="og:description" content="Preencha avaliações físicas de alunos, compare medidas, IMC, RCQ e percentual de gordura, veja o relatório completo na tela e exporte em PDF, JPG ou TXT.">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="Avaliação física com anamnese, PAR-Q, dobras cutâneas (Faulkner), composição corporal, IMC e RCQ. Compare até 6 avaliações e exporte em PDF ou JPG.">
+<meta property="og:url" content="https://labiel1jr.github.io/avaliacaofisicapersonalgraziellemartins/">
+<meta property="og:site_name" content="Studio Grazielle Martins">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:image" content="https://labiel1jr.github.io/avaliacaofisicapersonalgraziellemartins/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Logo do Studio Grazielle Martins — Treino Personalizado para Mulheres">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://labiel1jr.github.io/avaliacaofisicapersonalgraziellemartins/img/og-image.jpg">
 <meta name="twitter:title" content="Avaliação Física — Relatório Comparativo de Medidas">
-<meta name="twitter:description" content="Preencha avaliações físicas de alunos, compare medidas, IMC, RCQ e percentual de gordura, veja o relatório completo na tela e exporte em PDF, JPG ou TXT.">
+<meta name="twitter:description" content="Avaliação física com anamnese, PAR-Q, dobras cutâneas (Faulkner), composição corporal, IMC e RCQ. Compare até 6 avaliações e exporte em PDF ou JPG.">
 <meta name="theme-color" content="#0A090D">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Inter:wght@400;500;600&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
@@ -439,12 +450,12 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
         </div>
       </div>
       <div class="legend">
-        <div><i style="background:#9B93A3"></i>1ª avaliação</div>
-        <div><i style="background:#9B87AB"></i>2ª avaliação</div>
-        <div><i style="background:#9B7AB3"></i>3ª avaliação</div>
-        <div><i style="background:#9A6EBC"></i>4ª avaliação</div>
-        <div><i style="background:#9A61C4"></i>5ª avaliação</div>
-        <div><i style="background:#9A55CC"></i>6ª avaliação</div>
+        <div><i style="background:#E0463C"></i>1ª avaliação</div>
+        <div><i style="background:#F08A2E"></i>2ª avaliação</div>
+        <div><i style="background:#9A55CC"></i>3ª avaliação</div>
+        <div><i style="background:#E8C53A"></i>4ª avaliação</div>
+        <div><i style="background:#3F8FE0"></i>5ª avaliação</div>
+        <div><i style="background:#3DB56E"></i>6ª avaliação</div>
       </div>
     </div>
     <div class="note" id="note3d">O modelo é uma representação proporcional: cada segmento usa o raio derivado da circunferência informada (r = C ÷ 2π) e a altura do aluno. Arraste para girar, use a rolagem para aproximar. No modo "Comparar", só aparecem as avaliações com alguma medida preenchida.</div>
@@ -501,7 +512,8 @@ const SKINFOLD_KEYS = ['dcTriceps','dcSubescapular','dcSuprailiaca','dcAbdominal
 const MUSCLE_KEYS = ['ombros','torax','bracoD','bracoE','antebraco','coxaD','coxaE','panturrilhaD','panturrilhaE'];
 const AVAL_KEYS = ['av1','av2','av3','av4','av5','av6'];
 const AVAL_LABELS = { av1:'1ª avaliação', av2:'2ª avaliação', av3:'3ª avaliação', av4:'4ª avaliação', av5:'5ª avaliação', av6:'6ª avaliação' };
-const AVAL_COLORS = { av1:'#9B93A3', av2:'#9B87AB', av3:'#9B7AB3', av4:'#9A6EBC', av5:'#9A61C4', av6:'#9A55CC' };
+/* Cores dos corpos 3D: 1ª vermelha, 2ª laranja, 3ª roxa, 4ª amarela, 5ª azul, 6ª verde */
+const AVAL_COLORS = { av1:'#E0463C', av2:'#F08A2E', av3:'#9A55CC', av4:'#E8C53A', av5:'#3F8FE0', av6:'#3DB56E' };
 const OBJETIVOS = [
   'Emagrecer','Perder gordura abdominal','Reduzir o percentual de gordura','Definir o corpo',
   'Ganhar massa muscular','Diminuir medidas','Tonificar os músculos','Melhorar o condicionamento físico',
@@ -1891,22 +1903,31 @@ const three = {
       if(!filled.length){
         notes.push('Informe as medidas para gerar o modelo.');
       } else {
-        const n = filled.length;
-        /* espaçamento menor conforme mais figuras entram em cena, pra manter o grupo coeso */
-        const spacing = H * (n<=2 ? 0.34 : n<=4 ? 0.30 : n===5 ? 0.25 : 0.21);
-        const totalWidth = spacing*(n-1);
-        filled.forEach((k,i)=>{
+        /* posiciona as figuras lado a lado pela largura real de cada uma (braços incluídos),
+           com um vão livre entre elas, para que nunca se sobreponham */
+        const gap = H*0.10;
+        const figs = filled.map(k=>{
           const p = this.profile(data[k]);
-          const f = this.figure(p, AVAL_COLORS[k], 1);
-          f.position.x = (i - (n-1)/2) * spacing;
-          this.root.add(f);
           if(hasEstimated(p)) anyEstimated = true;
+          const f = this.figure(p, AVAL_COLORS[k], 1);
+          const box = new THREE.Box3().setFromObject(f);
+          return {f, minX:box.min.x, maxX:box.max.x};
         });
+        let x = 0;
+        figs.forEach((g,i)=>{
+          if(i>0) x += gap - g.minX;
+          g.f.position.x = x;
+          x += g.maxX;
+        });
+        const left = figs[0].minX, right = x;
+        const shift = (left+right)/2;
+        figs.forEach(g=>{ g.f.position.x -= shift; this.root.add(g.f); });
+        const totalWidth = right-left;
         /* afasta a câmera automaticamente só o suficiente pra caber todas as figuras,
            sem forçar zoom pra dentro caso o usuário já tenha afastado mais que isso */
-        const minDistForFit = totalWidth*1.05 + H*0.95;
+        const minDistForFit = totalWidth*0.85 + H*0.80;
         if(this.dist < minDistForFit) this.dist = Math.min(minDistForFit, 820);
-        this._floorRadius = Math.max(H*0.42, totalWidth/2 + H*0.30);
+        this._floorRadius = Math.max(H*0.42, totalWidth/2 + H*0.12);
       }
     } else {
       const k = 'av'+this.mode;
