@@ -213,6 +213,23 @@ li.rec{background:var(--shade); border:1px solid var(--line)} li.rec i{color:var
 .v3-bar button[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
 .legend{position:absolute; bottom:12px; left:12px; font-size:12px; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px 11px; display:grid; gap:4px}
 .legend i{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:7px}
+.parq{list-style:none; margin:0 0 4px; padding:0; counter-reset:q; display:grid; gap:6px}
+.parq li{counter-increment:q; display:grid; grid-template-columns:1fr 120px; gap:12px; align-items:center; padding:9px 12px; border:1px solid var(--line); border-radius:8px; background:var(--shade); font-size:14px; line-height:1.4}
+.parq li span::before{content:counter(q)". "; color:var(--accent); font-weight:600}
+.parq li.yes{border-color:var(--warn); background:var(--warn-soft)}
+@media (max-width:560px){ .parq li{grid-template-columns:1fr} }
+.field textarea{resize:vertical; min-height:62px; line-height:1.45}
+.alert{border-radius:10px; padding:12px 14px; font-size:13.5px; border:1px solid var(--line); background:var(--shade); margin-bottom:12px}
+.alert b{display:block; font-family:'Archivo',sans-serif; font-size:14px; margin-bottom:3px}
+.alert ul{margin:6px 0 0; padding-left:18px}
+.alert.r{border-color:var(--down); background:var(--down-soft)} .alert.r b{color:var(--down)}
+.alert.g{border-color:var(--up); background:var(--up-soft)} .alert.g b{color:var(--up)}
+.alert.o{border-color:var(--warn); background:var(--warn-soft)} .alert.o b{color:var(--warn)}
+.anam-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px}
+.anam-grid h4{grid-column:1/-1; font-family:'Archivo',sans-serif; font-size:12px; font-weight:600; color:var(--ink-2); letter-spacing:.03em; text-transform:uppercase; margin:8px 0 0}
+.anam-item{border:1px solid var(--line); border-radius:10px; padding:9px 12px; background:var(--shade)}
+.anam-item span{display:block; font-size:11.5px; color:var(--ink-2)}
+.anam-item b{font-weight:500; font-size:13.5px; white-space:pre-line}
 textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px; line-height:1.5; border:1px solid var(--line); border-radius:10px; background:var(--shade); resize:vertical}
 .toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(140%); background:var(--ink); color:var(--paper); padding:11px 18px; border-radius:999px; font-size:14px; z-index:50; transition:transform .25s ease; max-width:90vw}
 .toast.on{transform:translateX(-50%) translateY(0)}
@@ -274,15 +291,16 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
 
   <nav class="tabs" role="tablist" aria-label="Etapas da avaliação">
     <button class="tab" role="tab" id="t-aluno" aria-controls="p-aluno" aria-selected="true"><span class="n">1</span> Aluno</button>
-    <button class="tab" role="tab" id="t-av1" aria-controls="p-av1" aria-selected="false"><span class="n">2</span> 1ª Avaliação</button>
-    <button class="tab" role="tab" id="t-av2" aria-controls="p-av2" aria-selected="false"><span class="n">3</span> 2ª Avaliação</button>
-    <button class="tab" role="tab" id="t-av3" aria-controls="p-av3" aria-selected="false"><span class="n">4</span> 3ª Avaliação</button>
-    <button class="tab" role="tab" id="t-av4" aria-controls="p-av4" aria-selected="false"><span class="n">5</span> 4ª Avaliação</button>
-    <button class="tab" role="tab" id="t-av5" aria-controls="p-av5" aria-selected="false"><span class="n">6</span> 5ª Avaliação</button>
-    <button class="tab" role="tab" id="t-av6" aria-controls="p-av6" aria-selected="false"><span class="n">7</span> 6ª Avaliação</button>
-    <button class="tab" role="tab" id="t-rep" aria-controls="p-rep" aria-selected="false"><span class="n">8</span> Relatório</button>
-    <button class="tab" role="tab" id="t-3d" aria-controls="p-3d" aria-selected="false"><span class="n">9</span> Corpo em 3D</button>
-    <button class="tab" role="tab" id="t-dados" aria-controls="p-dados" aria-selected="false"><span class="n">10</span> Dados (JSON)</button>
+    <button class="tab" role="tab" id="t-anam" aria-controls="p-anam" aria-selected="false"><span class="n">2</span> Anamnese</button>
+    <button class="tab" role="tab" id="t-av1" aria-controls="p-av1" aria-selected="false"><span class="n">3</span> 1ª Avaliação</button>
+    <button class="tab" role="tab" id="t-av2" aria-controls="p-av2" aria-selected="false"><span class="n">4</span> 2ª Avaliação</button>
+    <button class="tab" role="tab" id="t-av3" aria-controls="p-av3" aria-selected="false"><span class="n">5</span> 3ª Avaliação</button>
+    <button class="tab" role="tab" id="t-av4" aria-controls="p-av4" aria-selected="false"><span class="n">6</span> 4ª Avaliação</button>
+    <button class="tab" role="tab" id="t-av5" aria-controls="p-av5" aria-selected="false"><span class="n">7</span> 5ª Avaliação</button>
+    <button class="tab" role="tab" id="t-av6" aria-controls="p-av6" aria-selected="false"><span class="n">8</span> 6ª Avaliação</button>
+    <button class="tab" role="tab" id="t-rep" aria-controls="p-rep" aria-selected="false"><span class="n">9</span> Relatório</button>
+    <button class="tab" role="tab" id="t-3d" aria-controls="p-3d" aria-selected="false"><span class="n">10</span> Corpo em 3D</button>
+    <button class="tab" role="tab" id="t-dados" aria-controls="p-dados" aria-selected="false"><span class="n">11</span> Dados (JSON)</button>
   </nav>
 
   <!-- ===== ALUNO ===== -->
@@ -302,7 +320,18 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
         <div class="field"><label for="f_prof">Profissional responsável</label><div class="row"><input id="f_prof" data-path="aluno.profissional" placeholder="Nome / CREF"></div></div>
       </div>
       <div class="note">Altura em centímetros (ex.: 172). Use vírgula ou ponto nos decimais — os dois funcionam.</div>
-      <div class="actions"><button class="solid" data-go="t-av1">Ir para a 1ª avaliação</button><button class="ghost" id="btnDemo">Preencher exemplo</button><button class="ghost" id="btnClear">Limpar tudo</button></div>
+      <div class="actions"><button class="solid" data-go="t-anam">Ir para a anamnese</button><button class="ghost" id="btnDemo">Preencher exemplo</button><button class="ghost" id="btnClear">Limpar tudo</button></div>
+    </div>
+  </section>
+
+  <!-- ===== ANAMNESE ===== -->
+  <section class="panel" id="p-anam" role="tabpanel" aria-labelledby="t-anam">
+    <div class="card">
+      <h2>Anamnese</h2>
+      <p class="hint">Levantamento de saúde, histórico de atividade física, hábitos e disponibilidade do aluno, para orientar a prescrição do treino. Responda o que se aplica — campos em branco não aparecem no relatório.</p>
+      <div id="form-anamnese"></div>
+      <div class="note">O PAR-Q é uma triagem inicial. Qualquer resposta "Sim" indica que o aluno deve procurar avaliação e liberação médica antes de iniciar ou intensificar o programa de exercícios.</div>
+      <div class="actions"><button class="solid" data-go="t-av1">Ir para a 1ª avaliação</button></div>
     </div>
   </section>
 
@@ -479,9 +508,87 @@ const OBJETIVOS = [
 ];
 const STORE_KEY = 'avaliacao-fisica:v1';
 
+/* Anamnese — foco em Educação Física */
+const PARQ = [
+  'Algum médico já disse que você possui algum problema de coração e que só deveria realizar atividade física supervisionada por profissionais de saúde?',
+  'Você sente dores no peito quando pratica atividade física?',
+  'No último mês, você sentiu dores no peito quando praticou atividade física?',
+  'Você apresenta desequilíbrio devido a tontura e/ou perda de consciência?',
+  'Você possui algum problema ósseo ou articular que poderia ser piorado pela atividade física?',
+  'Você toma atualmente algum medicamento para pressão arterial e/ou problema de coração?',
+  'Sabe de alguma outra razão pela qual você não deve praticar atividade física?'
+];
+const NENHUMA_COND = 'Nenhuma condição relatada';
+const CONDICOES = [
+  NENHUMA_COND,'Hipertensão arterial','Diabetes','Colesterol ou triglicerídeos elevados','Doença cardíaca',
+  'Asma ou doença respiratória','Problemas de coluna','Hérnia de disco','Lesões articulares (joelho, ombro, tornozelo…)',
+  'Osteoporose ou osteopenia','Labirintite ou tonturas','Alterações da tireoide','Ansiedade ou depressão','Gestação atual'
+];
+const ANAM_SECTIONS = [
+  {title:'Histórico de saúde', fields:[
+    {k:'condicoes', label:'Condições de saúde diagnosticadas', type:'checks', options:CONDICOES},
+    {k:'medicamentos', label:'Medicamentos em uso', type:'textarea', ph:'Nome, dose e finalidade'},
+    {k:'cirurgias', label:'Cirurgias', ph:'Tipo e ano'},
+    {k:'lesoes', label:'Lesões ou dores atuais', ph:'Local, intensidade, quando piora'},
+    {k:'restricoes', label:'Restrições médicas para exercícios', ph:'Ex.: evitar impacto'},
+    {k:'historicoFamiliar', label:'Histórico familiar', ph:'Doença cardíaca, diabetes, hipertensão…'},
+    {k:'paRepouso', label:'Pressão arterial em repouso', unit:'mmHg', ph:'120/80'},
+    {k:'fcRepouso', label:'FC de repouso', type:'number', unit:'bpm'}
+  ]},
+  {title:'Atividade física', fields:[
+    {k:'nivel', label:'Nível atual', type:'select', options:['Sedentário','Iniciante','Intermediário','Avançado']},
+    {k:'praticaAtual', label:'Modalidades praticadas atualmente', ph:'Musculação, corrida, natação…'},
+    {k:'freqSemanal', label:'Frequência atual', type:'select', options:['0','1','2','3','4','5','6','7'], unit:'dias/semana'},
+    {k:'duracao', label:'Duração média da sessão', type:'number', unit:'min'},
+    {k:'tempoPratica', label:'Tempo de prática ou tempo parado', ph:'Ex.: treina há 2 anos / parado há 6 meses'},
+    {k:'experienciaMusc', label:'Experiência com musculação', type:'select', options:['Nenhuma','Menos de 6 meses','De 6 meses a 2 anos','Mais de 2 anos']},
+    {k:'historicoEsportivo', label:'Histórico esportivo', type:'textarea', ph:'Esportes já praticados, competições, lesões esportivas'}
+  ]},
+  {title:'Hábitos de vida', fields:[
+    {k:'sonoHoras', label:'Horas de sono por noite', type:'number', unit:'h', step:0.5},
+    {k:'sonoQualidade', label:'Qualidade do sono', type:'select', options:['Ruim','Regular','Boa']},
+    {k:'tabagismo', label:'Tabagismo', type:'select', options:['Não fuma','Fumante','Ex-fumante']},
+    {k:'alcool', label:'Bebida alcoólica', type:'select', options:['Não consome','Socialmente','Frequentemente']},
+    {k:'alimentacao', label:'Alimentação', type:'select', options:['Ruim','Regular','Boa']},
+    {k:'nutricionista', label:'Acompanhamento nutricional', type:'select', options:['Sim','Não']},
+    {k:'agua', label:'Ingestão de água', type:'number', unit:'L/dia', step:0.1},
+    {k:'estresse', label:'Nível de estresse', type:'select', options:['Baixo','Moderado','Alto']},
+    {k:'ocupacao', label:'Rotina de trabalho', type:'select', options:['Predominantemente sentado','Predominantemente em pé','Fisicamente ativa']}
+  ]},
+  {title:'Disponibilidade e preferências', fields:[
+    {k:'diasDisponiveis', label:'Dias disponíveis para treinar', type:'select', options:['1','2','3','4','5','6','7'], unit:'dias/semana'},
+    {k:'tempoSessao', label:'Tempo disponível por sessão', type:'number', unit:'min'},
+    {k:'horario', label:'Horário preferido', type:'select', options:['Manhã','Tarde','Noite','Variável']},
+    {k:'local', label:'Local de treino', type:'select', options:['Academia','Em casa','Ao ar livre','Estúdio / personal']},
+    {k:'gosta', label:'Atividades de que gosta', ph:'Ex.: bike, treino funcional'},
+    {k:'naoGosta', label:'Atividades que evita ou não gosta', ph:'Ex.: corrida'},
+    {k:'observacoes', label:'Observações gerais', type:'textarea'}
+  ]}
+];
+function blankAnamnese(){
+  const o={};
+  PARQ.forEach((q,i)=>o['parq'+(i+1)]='');
+  ANAM_SECTIONS.forEach(sec=>sec.fields.forEach(f=>o[f.k] = f.type==='checks' ? [] : ''));
+  return o;
+}
+function blankData(){
+  return { versao:4, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''}, anamnese:blankAnamnese(),
+    av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval(), av5:blankAval(), av6:blankAval() };
+}
+function anamHasData(an){
+  return !!an && Object.values(an).some(v=>Array.isArray(v) ? v.length>0 : String(v??'').trim()!=='');
+}
+/* PAR-Q: 'pos' (alguma resposta Sim), 'neg' (todas Não), 'inc' (parcial) ou null (não respondido) */
+function parqStatus(an){
+  const r = PARQ.map((q,i)=>an ? an['parq'+(i+1)] : '');
+  const yes = r.map((v,i)=>v==='S'?i:-1).filter(i=>i>=0);
+  if(yes.length) return {st:'pos', yes};
+  if(r.every(v=>v==='N')) return {st:'neg', yes};
+  if(r.some(v=>v==='N')) return {st:'inc', yes};
+  return null;
+}
 function blankAval(){ const o={data:''}; MEASURES.forEach(m=>o[m.k]=''); return o; }
-let data = { versao:3, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''},
-  av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval(), av5:blankAval(), av6:blankAval() };
+let data = blankData();
 function avalHasData(av){
   return !!(av && (av.data || MEASURES.some(m=>num(av[m.k])!==null)));
 }
@@ -836,6 +943,9 @@ function analyze(){
   if(allUpSmall>=5) rec.push('Melhorar a hidratação e padronizar o horário das medições para reduzir o efeito de retenção hídrica');
   if(asymArm!==null && asymArm>=1.5) rec.push('Incluir trabalho unilateral para corrigir a assimetria entre os braços');
   if(asymLeg!==null && asymLeg>=2) rec.push('Incluir trabalho unilateral de membros inferiores para equilibrar as coxas');
+  const pq = parqStatus(data.anamnese);
+  if(pq && pq.st==='pos') rec.unshift('PAR-Q positivo: obter avaliação e liberação médica antes de progredir a intensidade do treino');
+  if(data.anamnese && String(data.anamnese.lesoes||'').trim()) rec.push('Adaptar a escolha e a amplitude dos exercícios às lesões ou dores relatadas na anamnese');
   rec.push('Cuidar da qualidade do sono, fator direto na recuperação e no controle do apetite');
   rec.push('Repetir a avaliação em 8 a 12 semanas, nas mesmas condições de horário, hidratação, alimentação e pontos anatômicos');
 
@@ -886,7 +996,7 @@ function analyze(){
    5. RENDERIZAÇÃO DO RELATÓRIO
    ======================================================================= */
 function hasAnyData(){
-  return filledAvalKeys().length>0 || !!data.aluno.nome;
+  return filledAvalKeys().length>0 || !!data.aluno.nome || anamHasData(data.anamnese);
 }
 function kpi(k,v,cls,clas,d){
   return '<div class="kpi '+(cls||'b')+'"><div class="k">'+esc(k)+'</div><div class="v">'+v+'</div>'+
@@ -1050,6 +1160,37 @@ function svgCompStacked(labels, partsList, opts){
   return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="'+esc(opts.title||'')+'">'+body+legend+'</svg>';
 }
 
+function renderAnamnese(an){
+  if(!anamHasData(an)) return '';
+  let h = '<div class="sec"><h3>Anamnese <em>saúde, atividade física e hábitos</em></h3>';
+  const pq = parqStatus(an);
+  if(pq && pq.st==='pos'){
+    h += '<div class="alert r"><b>PAR-Q positivo — liberação médica recomendada</b>'+
+      'Houve resposta "Sim" em '+pq.yes.length+' pergunta'+(pq.yes.length>1?'s':'')+'. Recomenda-se avaliação e liberação médica antes de iniciar ou intensificar o programa de exercícios.'+
+      '<ul>'+pq.yes.map(i=>'<li>'+esc(PARQ[i])+'</li>').join('')+'</ul></div>';
+  } else if(pq && pq.st==='neg'){
+    h += '<div class="alert g"><b>PAR-Q negativo</b>Todas as respostas foram "Não". O aluno está apto a iniciar atividade física com progressão gradual de intensidade.</div>';
+  } else if(pq && pq.st==='inc'){
+    h += '<div class="alert o"><b>PAR-Q incompleto</b>Nem todas as perguntas foram respondidas — complete o questionário antes de iniciar o programa.</div>';
+  }
+  let items='';
+  ANAM_SECTIONS.forEach(sec=>{
+    let block='';
+    sec.fields.forEach(f=>{
+      let v = an[f.k];
+      if(Array.isArray(v)) v = v.join(' · ');
+      v = String(v??'').trim();
+      if(!v) return;
+      if(f.type==='number') v = v.replace('.',',');
+      if(f.unit) v += ' '+f.unit;
+      block += '<div class="anam-item"><span>'+esc(f.label)+'</span><b>'+esc(v)+'</b></div>';
+    });
+    if(block) items += '<h4>'+esc(sec.title)+'</h4>'+block;
+  });
+  if(items) h += '<div class="anam-grid">'+items+'</div>';
+  return h+'</div>';
+}
+
 function renderReport(target){
   const host = target || $('#report');
   if(!hasAnyData()){
@@ -1081,6 +1222,8 @@ function renderReport(target){
        (meta?'<p>'+esc(meta)+'</p>':'')+(A.profissional?'<p>Avaliador: '+esc(A.profissional)+'</p>':'')+'</div>'+
        '<div class="dates">'+dateBlocks+
        (filled.length>1?'<div><span>Intervalo total</span><b>'+humanPeriod(an.days)+'</b></div>':'')+'</div></div>';
+
+  h += renderAnamnese(data.anamnese);
 
   /* Situação atual */
   const curLabel = filled.length ? AVAL_LABELS[an.curKey] : '1ª avaliação';
@@ -1229,6 +1372,37 @@ function buildAvalForm(which){
   h += '</div>';
   host.innerHTML = h;
 }
+function anamField(f){
+  const id='an_'+f.k, path='anamnese.'+f.k;
+  if(f.type==='checks'){
+    return '<div class="field full"><label>'+esc(f.label)+' <span style="font-weight:400">— marque todas que se aplicam</span></label><div class="checks">'+
+      f.options.map((o,i)=>'<label class="check-item" for="'+id+'_'+i+'"><input type="checkbox" id="'+id+'_'+i+'" data-list="'+path+'" value="'+esc(o)+'"><span>'+esc(o)+'</span></label>').join('')+
+      '</div></div>';
+  }
+  const lab = '<label for="'+id+'">'+esc(f.label)+(f.type==='select' && f.unit ? ' ('+esc(f.unit)+')' : '')+'</label>';
+  if(f.type==='select'){
+    return '<div class="field">'+lab+'<select id="'+id+'" data-path="'+path+'"><option value="">Não informado</option>'+
+      f.options.map(o=>'<option value="'+esc(o)+'">'+esc(o)+'</option>').join('')+'</select></div>';
+  }
+  if(f.type==='textarea'){
+    return '<div class="field full">'+lab+'<div class="row"><textarea id="'+id+'" rows="2" data-path="'+path+'" placeholder="'+esc(f.ph||'')+'"></textarea></div></div>';
+  }
+  const t = f.type==='number' ? 'type="number" inputmode="decimal" min="0" step="'+(f.step||1)+'"' : 'type="text"';
+  return '<div class="field">'+lab+'<div class="row"><input id="'+id+'" '+t+' data-path="'+path+'" placeholder="'+esc(f.ph||(f.type==='number'?'0':''))+'">'+
+    (f.unit?'<span class="unit">'+esc(f.unit)+'</span>':'')+'</div></div>';
+}
+function buildAnamneseForm(){
+  let h = '<div class="sub">PAR-Q — Questionário de Prontidão para Atividade Física</div><ol class="parq">'+
+    PARQ.map((q,i)=>'<li><span>'+esc(q)+'</span><select data-path="anamnese.parq'+(i+1)+'" aria-label="PAR-Q, pergunta '+(i+1)+'">'+
+      '<option value="">—</option><option value="N">Não</option><option value="S">Sim</option></select></li>').join('')+'</ol>';
+  ANAM_SECTIONS.forEach(sec=>{
+    h += '<div class="sub">'+esc(sec.title)+'</div><div class="grid">'+sec.fields.map(anamField).join('')+'</div>';
+  });
+  $('#form-anamnese').innerHTML = h;
+}
+function markParq(){
+  $$('.parq select').forEach(sel=>sel.closest('li').classList.toggle('yes', sel.value==='S'));
+}
 function buildObjetivosBox(){
   const host = $('#objetivosBox');
   host.innerHTML = OBJETIVOS.map((o,i)=>{
@@ -1247,11 +1421,14 @@ function getByPath(path){
 function formToData(){
   $$('[data-path]').forEach(el=>setByPath(el.dataset.path, el.value));
   data.aluno.objetivos = $$('#objetivosBox input[type=checkbox]:checked').map(cb=>cb.dataset.obj);
+  data.anamnese.condicoes = $$('[data-list="anamnese.condicoes"]:checked').map(cb=>cb.value);
 }
 function dataToForm(){
   $$('[data-path]').forEach(el=>{ el.value = getByPath(el.dataset.path) ?? ''; });
   const sel = new Set(data.aluno.objetivos||[]);
   $$('#objetivosBox input[type=checkbox]').forEach(cb=>{ cb.checked = sel.has(cb.dataset.obj); });
+  $$('[data-list]').forEach(cb=>{ cb.checked = (getByPath(cb.dataset.list)||[]).includes(cb.value); });
+  markParq();
 }
 function refresh(){
   renderReport();
@@ -1270,8 +1447,7 @@ function load(){
 }
 function mergeData(obj){
   if(!obj || typeof obj!=='object') return false;
-  const fresh = { versao:3, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''},
-    av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval(), av5:blankAval(), av6:blankAval() };
+  const fresh = blankData();
   if(obj.aluno){
     Object.keys(fresh.aluno).forEach(k=>{
       if(k==='objetivos'){
@@ -1280,6 +1456,13 @@ function mergeData(obj){
       } else if(obj.aluno[k]!=null){
         fresh.aluno[k] = (k==='altura') ? normalizeAltura(obj.aluno[k]) : String(obj.aluno[k]);
       }
+    });
+  }
+  if(obj.anamnese && typeof obj.anamnese==='object'){
+    Object.keys(fresh.anamnese).forEach(k=>{
+      const v = obj.anamnese[k];
+      if(v==null) return;
+      fresh.anamnese[k] = Array.isArray(fresh.anamnese[k]) ? (Array.isArray(v) ? v.map(String) : []) : String(v);
     });
   }
   AVAL_KEYS.forEach(av=>{
@@ -1764,14 +1947,21 @@ $('#btnPullAv4').addEventListener('click',()=>pullFromNext('av4'));
 $('#btnPullAv5').addEventListener('click',()=>pullFromNext('av5'));
 $('#btnPullAv6').addEventListener('click',()=>pullFromNext('av6'));
 $('#btnClear').addEventListener('click',()=>{
-  data = { versao:3, aluno:{nome:'',sexo:'',idade:'',altura:'',objetivos:[],profissional:''},
-    av1:blankAval(), av2:blankAval(), av3:blankAval(), av4:blankAval(), av5:blankAval(), av6:blankAval() };
+  data = blankData();
   dataToForm(); refresh(); toast('Todos os campos foram limpos.');
 });
 $('#btnDemo').addEventListener('click',()=>{
   mergeData({
     aluno:{nome:'Aluno de exemplo', sexo:'M', idade:'34', altura:'176',
       objetivos:['Perder gordura abdominal','Reduzir o percentual de gordura','Ganhar massa muscular'], profissional:''},
+    anamnese:{parq1:'N', parq2:'N', parq3:'N', parq4:'N', parq5:'S', parq6:'N', parq7:'N',
+      condicoes:['Problemas de coluna'], medicamentos:'', cirurgias:'', lesoes:'Dor lombar leve ao agachar com carga',
+      restricoes:'', historicoFamiliar:'Pai hipertenso', paRepouso:'125/80', fcRepouso:'72',
+      nivel:'Iniciante', praticaAtual:'Caminhada', freqSemanal:'2', duracao:'40', tempoPratica:'Parado há 1 ano',
+      experienciaMusc:'Menos de 6 meses', historicoEsportivo:'Futebol amador até os 25 anos',
+      sonoHoras:'6.5', sonoQualidade:'Regular', tabagismo:'Não fuma', alcool:'Socialmente', alimentacao:'Regular',
+      nutricionista:'Não', agua:'1.5', estresse:'Moderado', ocupacao:'Predominantemente sentado',
+      diasDisponiveis:'4', tempoSessao:'60', horario:'Manhã', local:'Academia', gosta:'Musculação, bike', naoGosta:'Corrida', observacoes:''},
     av1:{data:'2026-03-10', peso:'88.4', pescoco:'40', ombros:'116', torax:'103', busto:'', bracoD:'33', bracoE:'32.5',
          antebraco:'28', abdomen:'99', cintura:'95', quadril:'103', coxaD:'59', coxaE:'58.5', panturrilhaD:'38', panturrilhaE:'38'},
     av2:{data:'2026-06-09', peso:'82.1', pescoco:'39', ombros:'117', torax:'104', busto:'', bracoD:'34', bracoE:'33.5',
@@ -1798,6 +1988,7 @@ buildAvalForm('av4');
 buildAvalForm('av5');
 buildAvalForm('av6');
 buildObjetivosBox();
+buildAnamneseForm();
 load();
 dataToForm();
 document.addEventListener('input', e=>{
@@ -1812,7 +2003,20 @@ document.addEventListener('change', e=>{
     refresh();
     return;
   }
+  if(e.target.dataset && e.target.dataset.list){
+    const path = e.target.dataset.list;
+    const boxes = $$('[data-list="'+path+'"]');
+    /* "Nenhuma condição relatada" é exclusiva */
+    if(e.target.checked){
+      if(e.target.value===NENHUMA_COND) boxes.forEach(b=>{ if(b!==e.target) b.checked=false; });
+      else boxes.forEach(b=>{ if(b.value===NENHUMA_COND) b.checked=false; });
+    }
+    setByPath(path, boxes.filter(b=>b.checked).map(b=>b.value));
+    refresh();
+    return;
+  }
   if(!e.target.dataset || !e.target.dataset.path) return;
+  if(e.target.closest && e.target.closest('.parq')) markParq();
   let val = e.target.value;
   if(e.target.dataset.path === 'aluno.altura'){
     const fixed = normalizeAltura(val);
