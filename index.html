@@ -23,6 +23,7 @@
   --ink:#EDEAEA; --ink-2:#A79FAE; --line:#2C2732; --paper:#0A090D; --card:#141019;
   --accent:#9A55CC; --accent-soft:#241830; --shade:#181220;
   --up:#5FC492; --down:#EC8079; --info:#7FA9E0; --warn:#DDA940;
+  --cc-gord:#E3855B; --cc-musc:#A56BD6; --cc-osso:#6FA3E0; --cc-resid:#8F8898;
   --up-soft:#132A22; --down-soft:#2E1A19; --info-soft:#181F30; --warn-soft:#2C2213;
   --silver:#C9C4C8; --silver-line:#3A3440;
   --serif:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
@@ -159,6 +160,14 @@ input:focus,select:focus,textarea:focus{outline:none}
 .chart-card h4{font-family:'Archivo',sans-serif; font-size:12px; font-weight:600; color:var(--ink-2); letter-spacing:.03em; text-transform:uppercase; margin:0 0 6px}
 .chart-card svg{display:block; width:100%; height:auto}
 .chart-card .chart-empty{font-size:13px; color:var(--ink-2); margin:18px 0}
+.comp-wrap{display:flex; flex-wrap:wrap; align-items:center; gap:14px 20px; padding-bottom:8px}
+.comp-wrap svg{flex:0 0 auto; width:170px !important}
+.comp-legend{list-style:none; margin:0; padding:0; flex:1 1 170px; display:grid; gap:7px; font-size:13px}
+.comp-legend li{display:flex; align-items:baseline; gap:8px}
+.comp-legend i{display:inline-block; width:10px; height:10px; border-radius:3px; flex:0 0 auto; transform:translateY(1px)}
+.comp-legend span{flex:1}
+.comp-legend b{font-family:'Archivo',sans-serif; font-weight:600; white-space:nowrap}
+.comp-legend em{font-style:normal; color:var(--ink-2); min-width:46px; text-align:right}
 .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px}
 table{border-collapse:collapse; width:100%; font-size:14px; min-width:520px}
 th,td{padding:9px 13px; text-align:right; border-bottom:1px solid var(--line)}
@@ -219,6 +228,7 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
 .pdfstage{
   --ink:#231A2B; --ink-2:#5B5064; --line:#DDD6E0; --paper:#FFFFFF; --card:#FFFFFF; --shade:#F7F4F9;
   --accent:#7C3FA6; --up:#1B7F4F; --down:#B8352F; --info:#26588F; --warn:#A96A07;
+  --cc-gord:#C4622F; --cc-musc:#7C3FA6; --cc-osso:#2F6DB3; --cc-resid:#857D8C;
   --up-soft:#E6F3EC; --down-soft:#FAEAE9; --info-soft:#E8EFF7; --warn-soft:#FBF1DF;
   color:#231A2B;
 }
@@ -279,7 +289,7 @@ textarea.json{min-height:320px; font-family:ui-monospace,SFMono-Regular,Menlo,Co
   <section class="panel on" id="p-aluno" role="tabpanel" aria-labelledby="t-aluno">
     <div class="card">
       <h2>Identificação</h2>
-      <p class="hint">O sexo é usado nas fórmulas de percentual de gordura e na classificação do RCQ. Campos em branco são simplesmente ignorados nos cálculos.</p>
+      <p class="hint">O sexo é usado nas fórmulas de percentual de gordura, na massa residual (Würch) e na classificação do RCQ. A altura também entra no cálculo da massa óssea. Campos em branco são simplesmente ignorados nos cálculos.</p>
       <div class="grid">
         <div class="field"><label for="f_nome">Nome do aluno</label><div class="row"><input id="f_nome" data-path="aluno.nome" placeholder="Nome completo"></div></div>
         <div class="field"><label for="f_sexo">Sexo</label><select id="f_sexo" data-path="aluno.sexo"><option value="">Não informado</option><option value="M">Masculino</option><option value="F">Feminino</option></select></div>
@@ -448,8 +458,15 @@ const MEASURES = [
   {k:'coxaD',        label:'Coxa direita',        unit:'cm', dir:'up',   group:'Membros inferiores'},
   {k:'coxaE',        label:'Coxa esquerda',       unit:'cm', dir:'up',   group:'Membros inferiores'},
   {k:'panturrilhaD', label:'Panturrilha direita', unit:'cm', dir:'up',   group:'Membros inferiores'},
-  {k:'panturrilhaE', label:'Panturrilha esquerda',unit:'cm', dir:'up',   group:'Membros inferiores'}
+  {k:'panturrilhaE', label:'Panturrilha esquerda',unit:'cm', dir:'up',   group:'Membros inferiores'},
+  {k:'dcTriceps',     label:'Tricipital',          unit:'mm', dir:'down', group:'Dobras cutâneas'},
+  {k:'dcSubescapular',label:'Subescapular',        unit:'mm', dir:'down', group:'Dobras cutâneas'},
+  {k:'dcSuprailiaca', label:'Suprailíaca',         unit:'mm', dir:'down', group:'Dobras cutâneas'},
+  {k:'dcAbdominal',   label:'Abdominal',           unit:'mm', dir:'down', group:'Dobras cutâneas'},
+  {k:'diamPunho',     label:'Punho (biestiloide)', unit:'cm', dir:'flat', group:'Diâmetros ósseos', step:0.1},
+  {k:'diamFemur',     label:'Fêmur (biepicondiliano)', unit:'cm', dir:'flat', group:'Diâmetros ósseos', step:0.1}
 ];
+const SKINFOLD_KEYS = ['dcTriceps','dcSubescapular','dcSuprailiaca','dcAbdominal'];
 const MUSCLE_KEYS = ['ombros','torax','bracoD','bracoE','antebraco','coxaD','coxaE','panturrilhaD','panturrilhaE'];
 const AVAL_KEYS = ['av1','av2','av3','av4','av5','av6'];
 const AVAL_LABELS = { av1:'1ª avaliação', av2:'2ª avaliação', av3:'3ª avaliação', av4:'4ª avaliação', av5:'5ª avaliação', av6:'6ª avaliação' };
@@ -580,6 +597,29 @@ function navyBf(a, sexo, alturaCm){
   const v = 495/(1.29579 - 0.35004*Math.log10(x) + 0.22100*Math.log10(alturaCm)) - 450;
   return {v: clamp(v,4,70), why:null};
 }
+/* Percentual de gordura — Faulkner (1968): %G = 0,153 × (TR + SE + SI + AB) + 5,783 */
+function faulknerBf(a){
+  const dobras = SKINFOLD_KEYS.map(k=>num(a[k]));
+  if(dobras.every(v=>v===null)) return null;
+  if(dobras.some(v=>v===null)) return {v:null, why:'Faulkner exige as 4 dobras (tricipital, subescapular, suprailíaca e abdominal)'};
+  const soma = dobras.reduce((s,v)=>s+v,0);
+  return {v: clamp(0.153*soma + 5.783, 2, 70), why:null};
+}
+/* Fracionamento em 4 componentes (Carnaval, 2000):
+   massa óssea — Von Döbeln modificada por Rocha (1975): MO = 3,02 × (H² × R × F × 400)^0,712
+     (H = estatura, R = diâmetro biestiloide, F = diâmetro biepicondiliano do fêmur, todos em metros);
+   massa residual — Würch (1974): 24,1% do peso (homens) ou 20,9% (mulheres);
+   massa muscular — Matiegka: peso − (gorda + óssea + residual). */
+function boneMass(a, alturaCm){
+  const r=num(a.diamPunho), f=num(a.diamFemur);
+  if(!alturaCm || !r || !f) return null;
+  const h=alturaCm/100;
+  return 3.02*Math.pow(h*h*(r/100)*(f/100)*400, 0.712);
+}
+function residualMass(peso, sexo){
+  if(!peso || !sexo) return null;
+  return peso*(sexo==='M' ? 0.241 : 0.209);
+}
 function classBf(v,sexo){
   if(v===null||!sexo) return null;
   const T = sexo==='M' ? [6,14,18,25] : [14,21,25,32];
@@ -603,12 +643,23 @@ function derive(a, aluno){
   const peso = num(a.peso);
   const i = imc(peso, alturaCm);
   const r = rcq(num(a.cintura), num(a.quadril));
-  const bf = navyBf(a, sexo, alturaCm);
+  /* Faulkner tem prioridade quando as 4 dobras estão preenchidas; senão, método da Marinha */
+  const fk = faulknerBf(a);
+  const nv = navyBf(a, sexo, alturaCm);
+  const bf = (fk && fk.v!==null) ? fk : (nv.v!==null ? nv : (fk || nv));
+  const bfMethod = bf.v===null ? null : (bf===fk ? 'Faulkner' : 'Marinha dos EUA');
   const mg = (peso && bf.v!==null) ? peso*bf.v/100 : null;
   const mm = (peso && mg!==null) ? peso-mg : null;
+  const mo = boneMass(a, alturaCm), mr = residualMass(peso, sexo);
+  let mmu = null;
+  if(mg!==null && mo!==null && mr!==null){
+    mmu = peso-(mg+mo+mr);
+    if(mmu<=0) mmu = null;
+  }
   return {
     peso, imc:i, imcClass:classImc(i), rcq:r, rcqClass:classRcq(r,sexo),
-    bf:bf.v, bfWhy:bf.why, bfClass:classBf(bf.v,sexo), mg, mm,
+    bf:bf.v, bfWhy:bf.why, bfClass:classBf(bf.v,sexo), bfMethod, mg, mm,
+    mo, mr, mmu,
     waist:riskWaist(num(a.cintura), sexo)
   };
 }
@@ -631,7 +682,7 @@ function analyze(){
     const v1=num(a1[m.k]), v2=num(a2[m.k]);
     delta[m.k] = (v1!==null && v2!==null) ? v2-v1 : null;
   });
-  ['imc','rcq','bf','mg','mm'].forEach(k=>{
+  ['imc','rcq','bf','mg','mm','mo','mr','mmu'].forEach(k=>{
     delta[k] = (d1[k]!==null && d1[k]!==undefined && d2[k]!==null && d2[k]!==undefined) ? d2[k]-d1[k] : null;
   });
 
@@ -795,6 +846,7 @@ function analyze(){
   if(dPeso!==null && dCint!==null && dPeso<=-1 && dCint>=1) obs.push('Houve aumento de cintura apesar da redução de peso, sendo recomendável confirmar as medidas na próxima avaliação.');
   if(!obs.length && (dPeso!==null||dCint!==null)) obs.push('As medidas parecem coerentes entre as duas avaliações.');
   if(days!==null && days<21) obs.push('O intervalo entre as avaliações é curto ('+days+' dias); variações pequenas podem refletir oscilação normal e não mudança real de composição corporal.');
+  if(d1.bfMethod && d2.bfMethod && d1.bfMethod!==d2.bfMethod) obs.push('O percentual de gordura foi estimado por métodos diferentes ('+d1.bfMethod+' na '+AVAL_LABELS[baseKey]+' e '+d2.bfMethod+' na '+AVAL_LABELS[curKey]+'); a comparação entre eles é apenas aproximada.');
   if(d1.bfWhy || d2.bfWhy) obs.push('Percentual de gordura estimado de forma parcial ou indisponível — '+(d2.bfWhy||d1.bfWhy)+'.');
   obs.push('Recomenda-se repetir a avaliação nas mesmas condições (horário, hidratação, alimentação e pontos anatômicos) para garantir maior precisão.');
 
@@ -917,7 +969,7 @@ function svgTrendChart(labels, values, opts){
     xLabels += '<text x="'+xAt(i)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="'+opts.mutedColor+'">'+esc(lb)+'</text>';
   });
 
-  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="auto" role="img" aria-label="'+esc(opts.title||'')+'">'+
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="'+esc(opts.title||'')+'">'+
     gridSvg+
     '<path d="'+pathD+'" fill="none" stroke="'+opts.color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+
     dotsSvg+valueLabels+xLabels+
@@ -925,6 +977,77 @@ function svgTrendChart(labels, values, opts){
 }
 function chartCard(title, svg, fallbackMsg){
   return '<div class="chart-card"><h4>'+esc(title)+'</h4>'+(svg || '<p class="chart-empty">'+esc(fallbackMsg)+'</p>')+'</div>';
+}
+
+/* Componentes da composição corporal de uma avaliação já derivada.
+   4 componentes (gorda, muscular, óssea, residual) quando há dobras/diâmetros suficientes;
+   senão, 2 componentes (gorda × magra). */
+function compParts(d, colors){
+  if(d.mmu!==null && d.mmu!==undefined) return [
+    {k:'mg',  label:'Massa gorda',    v:d.mg,  color:colors.gord},
+    {k:'mmu', label:'Massa muscular', v:d.mmu, color:colors.musc},
+    {k:'mo',  label:'Massa óssea',    v:d.mo,  color:colors.osso},
+    {k:'mr',  label:'Massa residual', v:d.mr,  color:colors.resid}];
+  if(d.mg!==null && d.mm!==null) return [
+    {k:'mg', label:'Massa gorda', v:d.mg, color:colors.gord},
+    {k:'mm', label:'Massa magra', v:d.mm, color:colors.musc}];
+  return null;
+}
+/* Rosca SVG com a composição da avaliação atual + legenda com kg e %. */
+function svgCompDonut(parts, opts){
+  if(!parts) return null;
+  const total = parts.reduce((s,p)=>s+p.v,0);
+  if(!(total>0)) return null;
+  const S=170, c=S/2, R=80, r=52;
+  const pt = (rad,ang)=>[c+rad*Math.sin(ang), c-rad*Math.cos(ang)];
+  let a0=0, arcs='';
+  parts.forEach(p=>{
+    const a1 = a0 + p.v/total*Math.PI*2;
+    const large = (a1-a0)>Math.PI ? 1 : 0;
+    const [x0,y0]=pt(R,a0), [x1,y1]=pt(R,a1), [x2,y2]=pt(r,a1), [x3,y3]=pt(r,a0);
+    const pct = p.v/total*100;
+    arcs += '<path d="M'+x0+' '+y0+' A'+R+' '+R+' 0 '+large+' 1 '+x1+' '+y1+' L'+x2+' '+y2+' A'+r+' '+r+' 0 '+large+' 0 '+x3+' '+y3+' Z" '+
+      'fill="'+p.color+'" stroke="'+opts.bgColor+'" stroke-width="2" stroke-linejoin="round">'+
+      '<title>'+esc(p.label)+': '+fmt(p.v,1)+' kg ('+fmt(pct,1)+'%)</title></path>';
+    a0 = a1;
+  });
+  const svg = '<svg viewBox="0 0 '+S+' '+S+'" width="170" height="170" role="img" aria-label="'+esc(opts.title||'')+'">'+arcs+
+    '<text x="'+c+'" y="'+(c-2)+'" text-anchor="middle" font-size="22" font-weight="700" fill="'+opts.textColor+'">'+fmt(total,1)+'</text>'+
+    '<text x="'+c+'" y="'+(c+16)+'" text-anchor="middle" font-size="11" fill="'+opts.mutedColor+'">kg no total</text></svg>';
+  const legend = '<ul class="comp-legend">'+parts.map(p=>
+    '<li><i style="background:'+p.color+'"></i><span>'+esc(p.label)+'</span><b>'+fmt(p.v,1)+' kg</b><em>'+fmt(p.v/total*100,1)+'%</em></li>').join('')+'</ul>';
+  return '<div class="comp-wrap">'+svg+legend+'</div>';
+}
+/* Barras horizontais empilhadas (kg) — uma por avaliação, na mesma escala. */
+function svgCompStacked(labels, partsList, opts){
+  const rows = partsList.map((parts,i)=>({lab:labels[i], parts})).filter(r=>r.parts);
+  if(rows.length<2) return null;
+  const max = Math.max(...rows.map(r=>r.parts.reduce((s,p)=>s+p.v,0)));
+  const W=520, padL=34, padR=58, rowH=26, gap=12, padT=6;
+  const H = padT + rows.length*(rowH+gap) + 22;
+  const plotW = W-padL-padR;
+  let body='';
+  rows.forEach((row,ri)=>{
+    const y = padT + ri*(rowH+gap);
+    let x = padL, total=0;
+    body += '<text x="'+(padL-8)+'" y="'+(y+rowH/2+4)+'" text-anchor="end" font-size="11" fill="'+opts.mutedColor+'">'+esc(row.lab)+'</text>';
+    row.parts.forEach((p,pi)=>{
+      const w = p.v/max*plotW;
+      const last = pi===row.parts.length-1;
+      body += '<rect x="'+x+'" y="'+y+'" width="'+Math.max(0,w-(last?0:2))+'" height="'+rowH+'" rx="'+(pi===0||last?4:0)+'" fill="'+p.color+'">'+
+        '<title>'+esc(row.lab)+' · '+esc(p.label)+': '+fmt(p.v,1)+' kg</title></rect>';
+      if(w>=40) body += '<text x="'+(x+w/2-(last?0:1))+'" y="'+(y+rowH/2+4)+'" text-anchor="middle" font-size="10.5" font-weight="600" fill="#fff" pointer-events="none">'+fmt(p.v,1)+'</text>';
+      x += w; total += p.v;
+    });
+    body += '<text x="'+(x+6)+'" y="'+(y+rowH/2+4)+'" font-size="11.5" font-weight="600" fill="'+opts.textColor+'">'+fmt(total,1)+' kg</text>';
+  });
+  let legend='', lx=padL;
+  rows[rows.length-1].parts.forEach(p=>{
+    legend += '<rect x="'+lx+'" y="'+(H-13)+'" width="10" height="10" rx="3" fill="'+p.color+'"/>'+
+      '<text x="'+(lx+15)+'" y="'+(H-4)+'" font-size="11" fill="'+opts.mutedColor+'">'+esc(p.label)+'</text>';
+    lx += 15 + p.label.length*6.2 + 16;
+  });
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="'+esc(opts.title||'')+'">'+body+legend+'</svg>';
 }
 
 function renderReport(target){
@@ -939,8 +1062,11 @@ function renderReport(target){
   const chartColors = {
     accent: cvar('--accent','#9A55CC'), info: cvar('--info','#7FA9E0'),
     ink: cvar('--ink','#EDEAEA'), mutedColor: cvar('--ink-2','#A79FAE'),
-    lineColor: cvar('--line','#2C2732'), bgColor: cvar('--card','#141019')
+    lineColor: cvar('--line','#2C2732'), bgColor: cvar('--card','#141019'),
+    shade: cvar('--shade','#181220')
   };
+  const compColors = { gord: cvar('--cc-gord','#E3855B'), musc: cvar('--cc-musc','#A56BD6'),
+    osso: cvar('--cc-osso','#6FA3E0'), resid: cvar('--cc-resid','#8F8898') };
 
   const idade = num(A.idade), alt = num(A.altura);
   const meta = [A.sexo==='M'?'Masculino':(A.sexo==='F'?'Feminino':null), idade?idade+' anos':null, alt?fmt(alt,0)+' cm':null,
@@ -972,6 +1098,41 @@ function renderReport(target){
   if(d2.waist) h += '<div class="note" style="margin-top:12px">'+esc(d2.waist.t)+' — referência de cintura para '+(A.sexo==='M'?'homens: 94 cm (risco aumentado) e 102 cm (muito aumentado)':'mulheres: 80 cm (risco aumentado) e 88 cm (muito aumentado)')+'.</div>';
   h += '</div>';
 
+  /* Composição corporal — Faulkner (% de gordura) + fracionamento de Carnaval (óssea, residual, muscular) */
+  {
+    const curParts = compParts(d2, compColors);
+    const donut = svgCompDonut(curParts, {textColor:chartColors.ink, mutedColor:chartColors.mutedColor,
+      bgColor:chartColors.shade, title:'Composição corporal da '+curLabel});
+    const allDerived = filled.map(k=>derive(data[k],A));
+    const labs = filled.map(k=>AVAL_LABELS[k].replace(' avaliação',''));
+    const four = allDerived.filter(d=>d.mmu!==null).length>=2;
+    const stacked = svgCompStacked(labs, allDerived.map(d=>{
+      if(four){ const pr = compParts(d, compColors); return pr && pr.length===4 ? pr : null; }
+      return compParts({mg:d.mg, mm:d.mm}, compColors);
+    }), {textColor:chartColors.ink, mutedColor:chartColors.mutedColor, title:'Composição corporal por avaliação'});
+    const falta = [];
+    if(d2.bf===null) falta.push('as 4 dobras cutâneas (Faulkner)');
+    if(!num(A.altura)) falta.push('a altura');
+    if(!A.sexo) falta.push('o sexo');
+    if(d2.mo===null) falta.push('os diâmetros do punho e do fêmur');
+    if(!d2.peso) falta.push('o peso');
+    const metodo = d2.bfMethod==='Faulkner'
+      ? '% de gordura por Faulkner (1968)'
+      : (d2.bfMethod ? '% de gordura pelo método da Marinha dos EUA (dobras cutâneas incompletas)' : null);
+    const titleDonut = (curParts && curParts.length===4) ? 'Composição em 4 componentes' : 'Composição (gorda × magra)';
+    h += '<div class="sec"><h3>Composição corporal <em>Faulkner · Carnaval</em></h3><div class="charts-grid">'+
+         chartCard(titleDonut+' — '+curLabel.replace(' avaliação',''), donut,
+           'Para montar o gráfico, informe '+(falta.length?falta.join(', '):'as medidas necessárias')+'.')+
+         (filled.length>1 ? chartCard('Evolução da composição (kg)', stacked,
+           'É preciso ter a composição calculada em pelo menos duas avaliações para comparar.') : '')+
+         '</div>';
+    if(curParts && curParts.length===2)
+      h += '<div class="note" style="margin-top:12px">Para dividir a massa magra em muscular, óssea e residual, informe também '+esc(falta.join(', ')||'os diâmetros ósseos')+'.</div>';
+    h += '<div class="note" style="margin-top:12px">'+(metodo?esc(metodo)+'. ':'')+
+         'Fracionamento conforme Carnaval (2000): massa óssea por Von Döbeln modificada por Rocha (1975), massa residual por Würch (1974) e massa muscular por diferença (Matiegka). Estimativas de campo, com margem de erro.</div>';
+    h += '</div>';
+  }
+
   if(filled.length < 2){
     h += '<div class="sec"><h3>Comparativo</h3><div class="prose"><p>Preencha pelo menos duas avaliações (entre a 1ª e a 6ª) para o site montar o comparativo completo, a interpretação técnica, os pontos de atenção e as recomendações.</p></div></div>';
     h += '<div class="foot"><b>Importante:</b> esta análise é baseada nas medidas fornecidas e tem caráter informativo. A interpretação clínica e o planejamento de treinamento ou nutrição devem ser realizados por um profissional habilitado, considerando o histórico completo do aluno.</div>';
@@ -993,6 +1154,9 @@ function renderReport(target){
   h += rowCalc('% de gordura', filledDerived.map(d=>d.bf), an.delta.bf, 'down', 1, 'p.p.');
   h += rowCalc('Massa gorda', filledDerived.map(d=>d.mg), an.delta.mg, 'down', 1, 'kg');
   h += rowCalc('Massa magra', filledDerived.map(d=>d.mm), an.delta.mm, 'up', 1, 'kg');
+  h += rowCalc('Massa muscular', filledDerived.map(d=>d.mmu), an.delta.mmu, 'up', 1, 'kg');
+  h += rowCalc('Massa óssea', filledDerived.map(d=>d.mo), an.delta.mo, 'flat', 1, 'kg');
+  h += rowCalc('Massa residual', filledDerived.map(d=>d.mr), an.delta.mr, 'flat', 1, 'kg');
   h += '</tbody></table></div></div>';
 
   /* Histórico — peso e % de gordura ao longo das avaliações preenchidas */
